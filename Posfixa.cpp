@@ -1,5 +1,6 @@
 #include <iostream>
 #include <cstdlib>
+#include <string>
 
 using namespace std;
 /*----------------------- DECLARAÇÃO DA ESTRUTURA-------------------------*/
@@ -18,23 +19,31 @@ class Posfixa{
             void empilhar(PILHA **topo);
             void desempilhar(PILHA **topo);
             void listar(PILHA *topo);
+            int precedenciasPilha(PILHA *topo);
+            int precedenciasExpr(string expressao, int x);
+            void infixaParaPosfixa(string expressao);
 		};
 		~Posfixa();
+
         /*----------------------- FUNÇÃO EMPILHAR-----------------------------*/
         void empilhar(PILHA **topo, string recebe){
-            cout << "OI 1" << endl;
             PILHA *novo;
             novo = (PILHA*) malloc (sizeof(PILHA));
-            cout << "OI 1" << endl;
-            if(novo != NULL){
-                cout << "NOVO ANTES: " << novo->armazena << endl;
-                novo->armazena = recebe;
-                cout << "NOVO DEPOIS: " << novo->armazena << endl;
-                if(*topo == NULL)
+
+            if(novo == NULL)
+                cout << "OI 2" << endl;
+            else{
+                //novo->armazena = recebe;
+                if(*topo == NULL){
+                    novo->armazena = recebe;
                     novo->prox = NULL;
-                else
-                    novo->prox = *topo;
-                *topo = novo;
+                }
+                else{
+                    novo->armazena = recebe;// Erro tá aqui depois que é desempilhado algun item
+                    novo->prox = (*topo);
+                }
+                (*topo) = novo;
+                cout << "EMPILHADO COM SUCESSO" << novo->armazena << endl;
             }
         };
 
@@ -44,9 +53,12 @@ class Posfixa{
             if(aux == NULL)
                 cout << "NÃO EXISTE NENHUM ELEMENTO NA PILHA" << endl;
             else{
-                aux = (*topo)->prox;
-                delete *topo;
-                *topo = aux;
+                // aux = (*topo)->prox;
+                // delete *topo;
+                // *topo = aux;
+                aux = (*topo);
+                (*topo) = (*topo)->prox;
+                delete aux;
                 cout << "ITEM REMOVIDO COM SUCESSO" << endl;
             }
         };
@@ -59,7 +71,7 @@ class Posfixa{
             else{
                 aux = topo;
                 while(aux != NULL){
-                    cout << "EMPILHADO: " << aux->armazena << endl;
+                    cout << " EMPILHADO: " << aux->armazena << endl;
                     aux = aux->prox;
                 }
            }
@@ -93,61 +105,66 @@ class Posfixa{
         void infixaParaPosfixa(string expressao){
             string posfixa, recebe;
             PILHA *topo = NULL;
-            
+
             for(int x = 0; x < expressao.length(); x++){
                 //Tratamento de ser "(" -> SITUAÇÃO OK
-                cout << "TESTE 1: " << endl;
                 if(expressao[x] == '('){
                     recebe =  expressao[x];
                     empilhar(&topo, recebe);//Empilhar tá OK
-                    cout << "EMPILHADO: " << topo->armazena << endl;
+                    cout << " -> EMPILHADO: " << topo->armazena << endl;
                 }
 
                 else{
-                    cout << "TESTE 2: " << endl;
                     if(expressao[x] == ')'){
                         while(topo->armazena != "("){
                             posfixa += topo->armazena;
                             cout << "POSFIXA: " << posfixa << endl;
                             desempilhar(&topo);//Desempilha
                         }
-                        // if(topo->armazena == "("){
-                        //     desempilhar(&topo);
-                        // }
+                        if(topo->armazena == "("){
+                            desempilhar(&topo);
+                        }
                     }
 
                     else{
-                        cout << "TESTE 3: " << endl;
                         //Testes para as precedências
                         if(expressao[x] == '*' || expressao[x] == '.' || expressao[x] == '+') {
-                            //Aqui os testes 
-                            //Criei duas funções
-
-
                             if(topo == NULL){
                                 recebe = expressao[x];
                                 empilhar(&topo, recebe);
-                                cout << "EMPILHADO: " << topo->armazena << endl;//DEIXAR PARA TESTE
+                                cout << " 1 EMPILHADO: " << topo->armazena << endl;//DEIXAR PARA TESTE
                             }
                             else{
-                                while(precedenciasPilha(topo) > precedenciasExpr(expressao, x)){
-                                    posfixa += topo->armazena;
-                                    desempilhar(&topo);
-                                }
-                                if(precedenciasPilha(topo) < precedenciasExpr(expressao, x)){
+                                if(topo->armazena == "("){
                                     recebe = expressao[x];
+                                    cout << "RECEBE 2 " << recebe << endl;
                                     empilhar(&topo, recebe);
-                                    cout << "EMPILHADO: " << topo->armazena << endl;
+                                    cout << " 2 EMPILHADO: " << topo->armazena << endl;
+
+                                }
+                                else{
+                                    while(precedenciasPilha(topo) > precedenciasExpr(expressao, x)){
+                                        posfixa += topo->armazena;
+                                        desempilhar(&topo);
+                                    }
+                                    if(precedenciasPilha(topo) < precedenciasExpr(expressao, x)){
+                                        recebe = expressao[x];
+                                        cout << "RECEBE: " << recebe << endl;
+                                        cout << "IMPLEMENTAR" << endl;
+                                        empilhar(&topo, recebe);
+                                        cout << " 3 EMPILHADO: " << topo->armazena << endl;
+                                    }
                                 }
                             }
-                           
                         }
                         else{
                             posfixa += expressao[x];
                             cout << "POSFIXA: " << posfixa << endl;
                         }
                     }
-               }
+                }
+               //Falta verificar a questão de como operação em binário precisa de dois operadores
+               //
             }
             //printar
             for(int y = 0; y < expressao.length(); y++){
@@ -156,3 +173,4 @@ class Posfixa{
         };
 };
 
+                                    

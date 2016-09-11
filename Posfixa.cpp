@@ -123,7 +123,7 @@ class Posfixa{
                 //Tratando para caso seja * A e * (
                 if((expressao[x] == '*' && expressao[x+1] != '(') && 
                     (expressao[x] == '*' && expressao[x+1] != ')') && 
-                    (expressao[x] == '*' && expressao[x+1] == '.') && 
+                    (expressao[x] == '*' && expressao[x+1] != '.') && 
                     (expressao[x] == '*' && expressao[x+1] != '+')){
                     if(x+1 == expressao.length()){
                         break;

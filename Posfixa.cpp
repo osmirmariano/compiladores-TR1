@@ -22,9 +22,13 @@ class Posfixa{
             int precedenciasPilha(PILHA *topo);
             int precedenciasExpr(string expressao, int x);
             void infixaParaPosfixa(string expressao);
+            void verificarPosfixa (string posfixa);
+            string preencherExpressao(string expressao);
+            int verificaParentese(string expressao);
 		};
 		~Posfixa();
-         /*----------------------- FUNÇÃO LISTAR-------------------------------*/
+        
+        /*----------------------- FUNÇÃO LISTAR-------------------------------*/
         void listar(PILHA *topo){
             PILHA *aux;
             if(topo == NULL)
@@ -41,7 +45,6 @@ class Posfixa{
         /*----------------------- FUNÇÃO EMPILHAR-----------------------------*/
         void empilhar(PILHA **topo, string recebe){
             PILHA *novo;
-            //novo = (PILHA*) malloc (sizeof(PILHA));
             novo = new PILHA;
             if(novo == NULL)
                 cout << "NÃO ALOCADO" << endl;
@@ -64,20 +67,6 @@ class Posfixa{
                 (*topo) = (*topo)->prox; 
             }
         };
-
-        void liberaPilha (PILHA **topo){
-            PILHA *aux = (*topo);
-            if (aux == NULL)
-                cout << " NÃO EXISTE ELEMENTO PARA REMOVER!" << endl;
-            else{
-                do{
-                    aux = (*topo)->prox;
-                    free (*topo);
-                    (*topo) = aux;
-                    cout << " TODOS ELEMENTOS REMOVIDOS COM SUCESSO" << endl;
-                }while (aux != NULL);
-            }
-        }
 
         /*--------------------- FUNÇÃO PRECENDENCIA PILHA------------------------*/
         int precedenciasPilha(PILHA *topo){
@@ -129,7 +118,6 @@ class Posfixa{
                         break;
                     }
                     else{
-                        cout << "SIMBOLO: " << expressao[x] << endl;
                         novaExpr += '.';
                     }
                 }
@@ -198,74 +186,98 @@ class Posfixa{
             return novaExpr;
         };
 
+        int verificaParentese(string expressao){
+            int cont1 = 0, cont2 = 0;
+            for(int x = 0; x < expressao.length(); x++){
+                if(expressao[x] == '('){
+                    cont1++;
+                }
+                if(expressao[x] == ')'){
+                    cont2++;
+                }
+            }
+
+            if(cont1 == cont2)
+                return 1;
+            else
+                return 0;
+        }
+
         /*-----------------------FUNÇÃO INFIXAPARAPOSFIXA---------------------*/
         void infixaParaPosfixa(string expressao){
             string posfixa, recebe, novaExpressao;
-            PILHA *topo = NULL;
-            
-            preencherExpressao(expressao);
-            novaExpressao = preencherExpressao(expressao);
-            cout << "EXPRESSAO TRATADA COM A CONCATENAÇÃO: " << novaExpressao << endl << endl;
 
-            for(int x = 0; x < novaExpressao.length(); x++){
-                //Tratamento de ser "(", então empilha -> SITUAÇÃO OK
-                if(novaExpressao[x] == '('){
-                    recebe =  novaExpressao[x];
-                    empilhar(&topo, recebe);//Empilhar tá OK
-                }
+            if(verificaParentese(expressao) == 1){
+                PILHA *topo = NULL;
+                preencherExpressao(expressao);
+                novaExpressao = preencherExpressao(expressao);
+                cout << "EXPRESSAO TRATADA COM A CONCATENAÇÃO: " << novaExpressao << endl << endl;
 
-                else{
-                    //Tratamento para caso seja ")", então enquanto o topo = "(" desempilha -> SITUAÇÃO OK
-                    if(novaExpressao[x] == ')'){ 
-                        while(topo->armazena != "(" && topo != NULL){
-                            posfixa += topo->armazena;
-                            desempilhar(&topo);//Desempilha
+                for(int x = 0; x < novaExpressao.length(); x++){
+                    //Tratamento de ser "(", então empilha -> SITUAÇÃO OK
+                    if(novaExpressao[x] == '('){
+                        recebe =  novaExpressao[x];
+                        empilhar(&topo, recebe);//Empilhar tá OK
+                    }
+
+                    else{
+                        //Tratamento para caso seja ")", então enquanto o topo = "(" desempilha -> SITUAÇÃO OK
+                        if(novaExpressao[x] == ')'){ 
+                            while(topo->armazena != "(" && topo != NULL){
+                                posfixa += topo->armazena;
+                                desempilhar(&topo);//Desempilha
+                            }
+                            //Desempilhar e descartar o "(" -> SITUAÇÃO OK
+                            if(topo->armazena == "("){
+                                desempilhar(&topo);
+                            }
                         }
-                        //Desempilhar e descartar o "(" -> SITUAÇÃO OK
-                        if(topo->armazena == "("){
+                        else{
+                            //Para caso de ser operador
+                            if(novaExpressao[x] == '*' || novaExpressao[x] == '.' || novaExpressao[x] == '+') {                                
+                                while(precedenciasPilha(topo) >= precedenciasExpr(novaExpressao, x)){
+                                    posfixa += topo->armazena;
+                                    desempilhar(&topo); 
+                                }
+                                recebe = novaExpressao[x];
+                                empilhar(&topo, recebe);
+                            }
+                            else{
+                                posfixa += novaExpressao[x];
+                            }
+                        }
+                    }
+                    //Quando novaExpressao não tiver mais elementos e topo tiver
+                    if(x+1 == novaExpressao.length()){
+                        while(topo != NULL){
+                            posfixa += topo->armazena;
                             desempilhar(&topo);
                         }
                     }
-                    else{
-                        //Para caso de ser operador
-                        if(novaExpressao[x] == '*' || novaExpressao[x] == '.' || novaExpressao[x] == '+') {                                
-                            while(precedenciasPilha(topo) >= precedenciasExpr(novaExpressao, x)){
-                                posfixa += topo->armazena;
-                                desempilhar(&topo); 
-                            }
-                            recebe = novaExpressao[x];
-                            empilhar(&topo, recebe);
-                        }
-                        else{
-                            posfixa += novaExpressao[x];
-                        }
-                    }
                 }
-                //Quando novaExpressao não tiver mais elementos e topo tiver
-                if(x+1 == novaExpressao.length()){
-                    while(topo != NULL){
-                        posfixa += topo->armazena;
-                        desempilhar(&topo);
-                    }
-                }
+            }
+            else{
+                cout << " ERRO! FALTANDO PARENTESES" << endl;
             }
             //printar
-            cout << "POSFIXA CONVERTIDA: ";
-            for(int y = 0; y < novaExpressao.length(); y++){
-                cout << "" << posfixa[y];
-            }
-            cout << endl;
+            //cout << "POSFIXA CONVERTIDA: " << posfixa << endl;
+            // for(int y = 0; y < novaExpressao.length(); y++){
+            //     cout << "" << posfixa[y];
+            // }
+            //cout << endl;
             //return posfixa;
+            //verificarPosfixa (posfixa);
         };
 
-        // void verificarPosfixa (){
+        // void verificarPosfixa (string posfixa){
+        //     PILHA *topo = NULL;
         //     //Falta fazer o tratamento da pilha
-        //     string verificarPos, simbolo, op1, op2, valor;
-        //     verificarPos = infixaParaPosfixa(expressao);
-        //     for(int y = 0; y < verificarPos.length(); y++){
-        //         simbolo = verificarPos[x];
+        //     string simbolo, op1, op2;
+
+        //     for(int y = 0; y < posfixa.length(); y++){
+        //         simbolo = posfixa[y];
         //         //Verificando se é operando
-        //         if(simbolo[x] != '(' || simbolo[x] != ')' || simbolo[x] != '*' || simbolo[x] != '+' || simbolo[x] != '.'){
+        //         if(simbolo != "(" || simbolo != ")" || simbolo != "*" || simbolo != "+" || simbolo != "."){
         //             //Empilhar o operando
         //             empilhar(&topo, simbolo);
         //         }
@@ -279,9 +291,21 @@ class Posfixa{
         //                     op1 = topo->armazena;
         //                     desempilhar(&topo);
         //                 }
+        //                 else{
+        //                     cout << "EXISTE ERRO" << endl;
+        //                 }
+        //             }
+        //             else{
+        //                 cout << "EXISTE ERRO" << endl;
         //             }
         //         }
         //     }
+        //     op1 = topo->armazena;
+        //     desempilhar(&topo);
+        //     if(topo == NULL)
+        //         cout << "EXPRESSÃO VÁLIDA" << endl;
+        //     else
+        //         cout << "EXPRESSÃO INVÁLIDA" << endl;
         // }
 };
 

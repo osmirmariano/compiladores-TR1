@@ -30,6 +30,7 @@ int main(){
                 cout << " EXPRESSÃO: ";
                 cin >> expressao;
                 pos->infixaParaPosfixa(expressao);
+                
                 break;
             case 0:
                 cout << "\tAPLICAÇÃO ENCERRADA COM SUCESSO!" << endl;

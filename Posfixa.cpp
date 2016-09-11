@@ -41,20 +41,13 @@ class Posfixa{
         /*----------------------- FUNÇÃO EMPILHAR-----------------------------*/
         void empilhar(PILHA **topo, string recebe){
             PILHA *novo;
-            novo = (PILHA*) malloc (sizeof(PILHA));
-            listar(*topo);
+            //novo = (PILHA*) malloc (sizeof(PILHA));
+            novo = new PILHA;
             if(novo == NULL)
-                cout << "OI 2" << endl;
+                cout << "NÃO ALOCADO" << endl;
             else{
-                cout << "NOVO antes" << novo->armazena << endl;
                 novo->armazena = recebe;
-                cout << "NOVO depois" << novo->armazena << endl;
-                if(*topo == NULL){
-                    novo->prox = NULL;
-                }
-                else{
-                    novo->prox = (*topo);
-                }
+                novo->prox = (*topo);
                 (*topo) = novo;
             }
         };
@@ -65,32 +58,26 @@ class Posfixa{
             
             if(aux == NULL)
                 cout << "NÃO EXISTE NENHUM ELEMENTO NA PILHA" << endl;
-            else{
-
-                cout << "ALGO 1" << endl;
-                aux = (*topo);
-                cout << "AUX: " << aux->armazena << endl;
-                cout << "ALGO 2" << endl;
-                free (aux);
-                // if(*topo == NULL)
-                //     topo->armazena = '1';
-                cout << "ALGO 3" << endl;
-                (*topo) = (*topo)->prox;
-                cout << "ALGO 4" << endl;
-                //aux = (*topo);
-
-                /*cout << "ALGO 2 " << endl;
-                aux = (*topo)->prox;
-                cout << "ALGO 3 " << endl;
-                delete (*topo);
-                cout << "ALGO 4 " << endl;
-                cout << "TOPO DELETE: " << (*topo)->armazena << endl;
-                (*topo) = aux;
-                cout << "ALGO 5 " << endl;*/
+            else{ 
+                aux = (*topo); 
+                free (aux); 
+                (*topo) = (*topo)->prox; 
             }
         };
 
-       
+        void liberaPilha (PILHA **topo){
+            PILHA *aux = (*topo);
+            if (aux == NULL)
+                cout << " NÃO EXISTE ELEMENTO PARA REMOVER!" << endl;
+            else{
+                do{
+                    aux = (*topo)->prox;
+                    free (*topo);
+                    (*topo) = aux;
+                    cout << "TODOS ELEMENTOS REMOVIDOS COM SUCESSO" << endl;
+                }while (aux != NULL);
+            }
+        }
 
         /*--------------------- FUNÇÃO PRECENDENCIA PILHA------------------------*/
         int precedenciasPilha(PILHA *topo){
@@ -99,14 +86,16 @@ class Posfixa{
             }
             else{
                 if(topo->armazena == "*"){
-                    opction = 3;
+                    opction = 4;
                 }
                 else if(topo->armazena == "."){
-                    opction = 2;
+                    opction = 3;
                 }
                 else if(topo->armazena == "+"){
-                    opction = 1;
+                    opction = 2;
                 }
+                else if(topo->armazena == "(")
+                    opction = 1;
             }            
             return opction;
         };
@@ -115,10 +104,12 @@ class Posfixa{
         int precedenciasExpr(string novaExpressao, int x){
             
             if(novaExpressao[x] == '*')
-                opcao = 3;
+                opcao = 4;
             else if(novaExpressao[x] == '.')
-                opcao = 2;
+                opcao = 3;
             else if(novaExpressao[x] == '+')
+                opcao = 2;
+            else if(novaExpressao[x] == '(')
                 opcao = 1;
             return opcao;
         };
@@ -200,104 +191,116 @@ class Posfixa{
             for(int x = 0; x < novaExpressao.length(); x++){
                 //Tratamento de ser "(", então empilha -> SITUAÇÃO OK
                 if(novaExpressao[x] == '('){
+                    cout << "------------------------------------------" << endl;
                     recebe =  novaExpressao[x];
-                    cout << "RECEBE: " << recebe << endl;
+                    cout << "É ( - VAI SER EMPILHADO: " << recebe << endl;
                     empilhar(&topo, recebe);//Empilhar tá OK
-                    cout << "SAIU" << endl;
-                    cout << "EMPILHADO, QUANDO O ITEM FOR '(' -> " << topo->armazena << endl;
+                    cout << "FOI EMPILHADO: " << recebe << endl;
+                    cout << "LISTA DOS QUE TÁ NA PILHA" << endl;
+                    listar(topo);
+                    cout << "------------------------------------------" << endl << endl;
                 }
 
                 else{
                     //Tratamento para caso seja ")", então enquanto o topo = "(" desempilha -> SITUAÇÃO OK
-                    if(novaExpressao[x] == ')'){
-                        //cout << "ITEM CORRESPONDE AO ')' -> " << topo->armazena << endl;
+                    if(novaExpressao[x] == ')'){ 
                         while(topo->armazena != "(" && topo != NULL){
+                            cout << "------------------------------------------" << endl;
+                            cout << "ACHOU UM ) - DESEMPILHAR" << endl;
                             posfixa += topo->armazena;
                             cout << "POSFIXA: " << posfixa << endl;
                             cout << "VAI SER DESEMPILHADO, QUANDO O ITEM TOPO FOR != ')' -> " << topo->armazena << endl;
                             desempilhar(&topo);//Desempilha
-                            cout << "AGORA O TEMOS NO TOPO " << topo->armazena << endl;
-                            
-                            //cout << "PROCURANDO ERRO 2" << endl;
+                            cout << "AGORA O TEMOS NO TOPO " << topo->armazena << endl; 
+                            cout << "------------------------------------------" << endl << endl;
                         }
                         //Desempilhar e descartar o "(" -> SITUAÇÃO OK
                         if(topo->armazena == "("){
-                            cout << "VAI SER DESEMPILHADO, QUANDO O ITEM TOPO FOR == '(' -> " << topo->armazena << endl;
+                            cout << "------------------------------------------" <<  endl;
+                            cout << "ACHOU UM ) - E PAROU O LAÇO VAI DESEMPILHAR" << topo->armazena << endl;
                             desempilhar(&topo);
-                            //cout << "VAI SER DESEMPILHADO, TESTE -> " << topo->armazena << endl;
-                            //cout << "PROCURANDO ERRO 3" << endl;
+                            cout << "------------------------------------------" << endl << endl;
                         }
                     }
-
                     else{
                         //Para caso de ser operador
                         if(novaExpressao[x] == '*' || novaExpressao[x] == '.' || novaExpressao[x] == '+') {
-                            //cout << "PROCURANDO ERRO 4" << endl;
-                            if(topo == NULL){
-                                recebe = novaExpressao[x];
-                                cout << "TOPO TÁ VAZIO, VAI EMPILHAR NO 2º EMPILHAR * -> " << recebe << endl;
-                                empilhar(&topo, recebe);
-                                cout << "EMPILHADO: " << topo->armazena << endl;
-                                //cout << "PROCURANDO ERRO 5" << endl;
+                            cout << "===============================================" << endl;
+                            cout << "PRECENDENCIA PILHA: " << precedenciasPilha(topo) << endl;
+                            cout << "PRECENDENCIA EXPRE: " << precedenciasExpr(novaExpressao, x) << endl << endl; 
+                            cout << "LISTAR PARA VER" << endl;
+                            listar(topo);
+                            cout << "===============================================" << endl;
+                                
+                            while(precedenciasPilha(topo) >= precedenciasExpr(novaExpressao, x)){
+                                posfixa += topo->armazena;
+                                cout << "TOPO QUE SERÁ DESEMPILHADO: " << topo->armazena << endl;
+                                desempilhar(&topo); //Erro ta aqui ------------>
+                                cout << "POSFIXA: " << posfixa << endl;
+                                if(topo == NULL)
+                                    cout << "VAZIA" << endl;
                             }
-                            else{
-                                //cout << "PROCURANDO ERRO 6" << endl;
-                                if(topo->armazena == "("){
-                                    recebe = novaExpressao[x];
-                                    empilhar(&topo, recebe);
-                                    cout << "EMPILHADO, QUANDO O ITEM TOPO FOR '(' -> " << topo->armazena << endl;
-                                }
-                                else{
-                                    //Verifica se a precedencia do topo é > que a da expressão (operador) -> SITUAÇÃO OK
-                                    //cout << "PROCURANDO ERRO 8" << endl;
-                                    cout << "* = " << precedenciasPilha(topo) << " É > QUE . = " << precedenciasExpr(novaExpressao, x) << endl;
-
-                                    while(precedenciasPilha(topo) >= precedenciasExpr(novaExpressao, x)){
-                                        cout << "NOVAEXPRESSAO: " << novaExpressao[x] << endl;
-                                        //cout << "PROCURANDO ERRO 9" << endl;
-                                        posfixa += topo->armazena;
-                                        //cout << "PROCURANDO ERRO 00" << endl;
-                                        cout << "TOPO: " << topo->armazena << endl;
-                                        desempilhar(&topo); //Erro ta aqui ------------>
-                                        cout << "POSFIXA: " << posfixa << endl;
-                                        cout << "PRECENDENCIA PILHA: " << precedenciasPilha(topo) << endl;
-
-                                        cout << "PRECENDENCIA EXPRE: " << precedenciasExpr(novaExpressao, x) << endl << endl;
-                                    
-                                    }
-                                    //cout << "VALOR" << endl;
-                                    cout << "RECEBE: " << recebe << endl;
-                                    recebe = novaExpressao[x];
-                                    empilhar(&topo, recebe);
-                                    //cout << "PROCURANDO ERRO 10" << endl;
-                                }
-                            }
+                            cout << "------------------------------------------" << endl;
+                            recebe = novaExpressao[x];
+                            cout << "VAI SER EMPILHADO: " << recebe << endl;
+                            empilhar(&topo, recebe);
+                            cout << "EMPILHADO: " << topo->armazena << endl;
+                            cout << "LISTA DOS QUE TÁ NA PILHA" << endl;
+                            listar(topo);
+                            cout << "------------------------------------------" << endl  << endl;
                         }
-                        //Falta Fazer o teste para caso a expressão acabe e ainda reste elementos na pilha e esvaziar
+                            //Falta Fazer o teste para caso a expressão acabe e ainda reste elementos na pilha e esvaziar
                         else{
                             posfixa += novaExpressao[x];
+                            cout << "------------------------------------------" << endl;
+                            cout << " VAI DIRETO PARA POSFIXA: " << novaExpressao[x] << endl;
                             cout << "POSFIXA RECEBEU -> " << posfixa << endl;
+                            cout << "------------------------------------------" << endl  << endl;
                         }
                     }
                 }
                 //Quando novaExpressao não tiver mais elementos e topo tiver
-                cout << "VALOR X: " << x << endl; 
-                cout << "VALOR N: " << novaExpressao.length() << endl;
                 if(x+1 == novaExpressao.length()){
                     while(topo != NULL){
                         posfixa += topo->armazena;
                         desempilhar(&topo);
-                        cout << "PROCURANDO ERRO 12" << endl;
                     }
                 }
             }
             //printar
-            cout << endl;
+            cout << "POSFIXA GERADA: ";
             for(int y = 0; y < novaExpressao.length(); y++){
-                cout << " " << posfixa[y];
+                cout << "" << posfixa[y];
             }
             cout << endl;
+            //return posfixa;
         };
+
+        // void verificarPosfixa (){
+        //     //Falta fazer o tratamento da pilha
+        //     string verificarPos, simbolo, op1, op2, valor;
+        //     verificarPos = infixaParaPosfixa(expressao);
+        //     for(int y = 0; y < verificarPos.length(); y++){
+        //         simbolo = verificarPos[x];
+        //         //Verificando se é operando
+        //         if(simbolo[x] != '(' || simbolo[x] != ')' || simbolo[x] != '*' || simbolo[x] != '+' || simbolo[x] != '.'){
+        //             //Empilhar o operando
+        //             empilhar(&topo, simbolo);
+        //         }
+        //         else{
+        //             //Verificando se é operador binário
+        //             if(topo != NULL){
+        //                 //Falta Declarar o tipos das variáveis op1, op2 e valor, não sei
+        //                 op2 = topo->armazena;
+        //                 desempilhar(&topo);
+        //                 if(topo != NULL){
+        //                     op1 = topo->armazena;
+        //                     desempilhar(&topo);
+        //                 }
+        //             }
+        //         }
+        //     }
+        // }
 };
 
                                     

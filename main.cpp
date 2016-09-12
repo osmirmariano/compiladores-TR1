@@ -7,10 +7,7 @@ int main(){
     int op;
     string expressao;
     Posfixa *pos = new Posfixa();
-    //PILHA *topo = NULL;
-    //pos->iniciaPilha(&pilha);
-    //DADOS conteudo;
-
+    
     do{
         cout << "---------------------------------------------------" << endl;
         cout << "\t MENU DE OPÇÃO" << endl;
@@ -33,7 +30,7 @@ int main(){
                 
                 break;
             case 0:
-                cout << "\tAPLICAÇÃO ENCERRADA COM SUCESSO!" << endl;
+                cout << "\tAPLICAÇÃO ENCERRADA COM SUCESSO!" << endl << endl;
                 break;
             default:
                 cout << "\tOPÇÃO INVÁLIDA, POR FAVOR ESCOLHA UMA VÁLIDA" << endl;

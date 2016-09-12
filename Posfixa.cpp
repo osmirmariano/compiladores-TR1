@@ -28,7 +28,7 @@ class Posfixa{
 		};
 		~Posfixa();
         
-        /*----------------------- FUNÇÃO LISTAR-------------------------------*/
+        /*--------------------- FUNÇÃO LISTAR PARA TESTES------------------------*/
         void listar(PILHA *topo){
             PILHA *aux;
             if(topo == NULL)
@@ -58,15 +58,15 @@ class Posfixa{
         /*----------------------- FUNÇÃO DESEMPILHAR-----------------------------*/
         void desempilhar(PILHA **topo){
             PILHA *aux;
-            
             if(aux == NULL)
                 cout << "NÃO EXISTE NENHUM ELEMENTO NA PILHA" << endl;
             else{ 
                 aux = (*topo); 
-                free (aux); 
                 (*topo) = (*topo)->prox; 
+                delete aux; 
             }
         };
+                
 
         /*--------------------- FUNÇÃO PRECENDENCIA PILHA------------------------*/
         int precedenciasPilha(PILHA *topo){
@@ -186,6 +186,7 @@ class Posfixa{
             return novaExpr;
         };
 
+        /*-----------------------FUNÇÃO VERIFICA PARENTESES----------------------*/
         int verificaParentese(string expressao){
             int cont1 = 0, cont2 = 0;
             for(int x = 0; x < expressao.length(); x++){
@@ -255,58 +256,56 @@ class Posfixa{
                         }
                     }
                 }
+                cout << "-----------------------------------------------------" << endl;
+                cout <<  " POSFIXA: " << posfixa << endl;
+                cout << "-----------------------------------------------------" << endl;
+                topo = NULL;
+                verificarPosfixa (posfixa);
             }
             else{
                 cout << " ERRO! FALTANDO PARENTESES" << endl;
             }
-            //printar
-            //cout << "POSFIXA CONVERTIDA: " << posfixa << endl;
-            // for(int y = 0; y < novaExpressao.length(); y++){
-            //     cout << "" << posfixa[y];
-            // }
-            //cout << endl;
-            //return posfixa;
-            //verificarPosfixa (posfixa);
         };
 
-        // void verificarPosfixa (string posfixa){
-        //     PILHA *topo = NULL;
-        //     //Falta fazer o tratamento da pilha
-        //     string simbolo, op1, op2;
+        //Tem erro, não sei muito bem o que devo fazer nesta função
+        /*-----------------------FUNÇÃO VERIFICAR POSFIXA-----------------------*/
+        void verificarPosfixa (string posfixa){
+            PILHA *topo = NULL; 
+            string simbolo, op1, op2;
 
-        //     for(int y = 0; y < posfixa.length(); y++){
-        //         simbolo = posfixa[y];
-        //         //Verificando se é operando
-        //         if(simbolo != "(" || simbolo != ")" || simbolo != "*" || simbolo != "+" || simbolo != "."){
-        //             //Empilhar o operando
-        //             empilhar(&topo, simbolo);
-        //         }
-        //         else{
-        //             //Verificando se é operador binário
-        //             if(topo != NULL){
-        //                 //Falta Declarar o tipos das variáveis op1, op2 e valor, não sei
-        //                 op2 = topo->armazena;
-        //                 desempilhar(&topo);
-        //                 if(topo != NULL){
-        //                     op1 = topo->armazena;
-        //                     desempilhar(&topo);
-        //                 }
-        //                 else{
-        //                     cout << "EXISTE ERRO" << endl;
-        //                 }
-        //             }
-        //             else{
-        //                 cout << "EXISTE ERRO" << endl;
-        //             }
-        //         }
-        //     }
-        //     op1 = topo->armazena;
-        //     desempilhar(&topo);
-        //     if(topo == NULL)
-        //         cout << "EXPRESSÃO VÁLIDA" << endl;
-        //     else
-        //         cout << "EXPRESSÃO INVÁLIDA" << endl;
-        // }
+            for(int y = 0; y < posfixa.length(); y++){
+                simbolo = posfixa[y];
+                //Verificando se é operando
+                if(simbolo != "(" && simbolo != ")" && simbolo != "*" && simbolo != "+" && simbolo != "."){
+                    //Empilhar o operando
+                    empilhar(&topo, simbolo);
+                }
+                else{
+                    //Verificando se é operador binário
+                    if(topo != NULL){
+                        //Falta Declarar o tipos das variáveis op1, op2 e valor, não sei
+                        op2 = topo->armazena;
+                        desempilhar(&topo);
+                        if(topo != NULL){
+                            op1 = topo->armazena;
+                            desempilhar(&topo);
+                        }
+                        else{
+                            cout << "EXISTE ERRO" << endl;
+                        }
+                    }
+                    else{
+                        cout << "EXISTE ERRO" << endl;
+                    }
+                }
+            }
+            //op1 = topo->armazena;
+            //desempilhar(&topo);
+            if(topo == NULL)
+                cout << "EXPRESSÃO VÁLIDA" << endl;
+            else
+                cout << "EXPRESSÃO INVÁLIDA" << endl;
+        }
 };
 
                                     

@@ -22,7 +22,6 @@ class Posfixa{
             int precedenciasPilha(PILHA *topo);
             int precedenciasExpr(string expressao, int x);
             void infixaParaPosfixa(string expressao);
-            void verificarPosfixa (string posfixa);
             string preencherExpressao(string expressao);
             int verificaParentese(string expressao);
             void operadoresBinariosVerificacao(string expressao);
@@ -204,8 +203,7 @@ class Posfixa{
                 return 0;
         }
 
-        //Função para teste, para saber se os operadores binários estão certo, visto que na 
-        //função abaixo não estou sabendo muito bem como implementar
+        /*-----------------------FUNÇÃO VERIFICA OPERADORES----------------------*/
         void operadoresBinariosVerificacao(string expressao){
             int verifica1 = 0, verifica2 = 0;
             for(int x = 0; x < expressao.length(); x++){
@@ -216,19 +214,18 @@ class Posfixa{
                         verifica1 = 1;
                     }
                     else{
-                        cout << "EXP: " << expressao[x] << endl;
                         verifica2 = 2;
                     }
                 }
             }
             if(verifica2 == 2){
-                cout << " ERRO: EXISTE UM OPERADOR BINÁRIO '+ OU '.' " << endl;
+                cout << endl << "      ERRO: EXISTE UM OPERADOR BINÁRIO '+ OU '.' " << endl;
                 cout << " \tQUE NÃO POSSUI SEU CORRESPONDENTE" << endl;
             }
 
             else
                 infixaParaPosfixa(expressao);
-        }
+        };
 
         /*-----------------------FUNÇÃO INFIXAPARAPOSFIXA---------------------*/
         void infixaParaPosfixa(string expressao){
@@ -238,7 +235,7 @@ class Posfixa{
                 PILHA *topo = NULL;
                 preencherExpressao(expressao);
                 novaExpressao = preencherExpressao(expressao);
-                cout << "EXPRESSAO TRATADA COM A CONCATENAÇÃO: " << novaExpressao << endl << endl;
+                //cout << " CORRESPONDENTE: " << novaExpressao << endl << endl;
 
                 for(int x = 0; x < novaExpressao.length(); x++){
                     //Tratamento de ser "(", então empilha -> SITUAÇÃO OK
@@ -282,56 +279,68 @@ class Posfixa{
                         }
                     }
                 }
-                cout << "-----------------------------------------------------" << endl;
-                cout <<  " POSFIXA: " << posfixa << endl;
-                cout << "-----------------------------------------------------" << endl;
+                cout << "----------------------------------------------------------------------" << endl;
+                cout <<  " A CONVERSÃO DA EXPRESSAO: '" << novaExpressao << "' INFIXA PARA ";
+                cout << "POSFIXA É: " << posfixa << endl;
+                cout << "----------------------------------------------------------------------" << endl;
                 topo = NULL;
-                //verificarPosfixa (posfixa);
+                //verificarPosfixa (posfixa, expressao);
             }
             else{
-                cout << " ERRO! FALTANDO PARENTESES" << endl;
+                cout << endl << "\t ERRO! FALTANDO PARENTESES" << endl;
             }
+            
         };
 
-        //Tem erro, não sei muito bem o que devo fazer nesta FUNÇÃO
-        /*-----------------------FUNÇÃO VERIFICAR POSFIXA-----------------------*/
-        void verificarPosfixa (string posfixa){
-            PILHA *topo = NULL; 
-            string simbolo, op1, op2;
 
-            for(int y = 0; y < posfixa.length(); y++){
-                simbolo = posfixa[y];
-                //Verificando se é operando
-                if(simbolo != "(" && simbolo != ")" && simbolo != "*" && simbolo != "+" && simbolo != "."){
-                    //Empilhar o operando
-                    empilhar(&topo, simbolo);
-                }
-                else{
-                    //Verificando se é operador binário
-                    if(topo != NULL){
-                        //Falta Declarar o tipos das variáveis op1, op2 e valor, não sei
-                        op2 = topo->armazena;
-                        desempilhar(&topo);
-                        if(topo != NULL){
-                            op1 = topo->armazena;
-                            desempilhar(&topo);
-                        }
-                        else{
-                            cout << "EXISTE ERRO" << endl;
-                        }
-                    }
-                    else{
-                        cout << "EXISTE ERRO" << endl;
-                    }
-                }
-            }
-            //op1 = topo->armazena;
-            //desempilhar(&topo);
-            if(topo == NULL)
-                cout << "EXPRESSÃO VÁLIDA" << endl;
-            else
-                cout << "EXPRESSÃO INVÁLIDA" << endl;
-        }
+        /*-----------------------FUNÇÃO VERIFICAR POSFIXA-----------------------*/
+        // void verificarPosfixa (string posfixa, string expressao){
+        //     PILHA *topo = NULL; 
+        //     string simbolo, a;
+        //     a = "0";
+        //     for(int y = 0; y < posfixa.length(); y++){
+        //         simbolo = posfixa[y];
+        //         //Verificando se é operando
+        //         if(simbolo != "(" && simbolo != ")" && simbolo != "*" && simbolo != "+" && simbolo != "."){
+        //             //Empilhar o operando
+        //             empilhar(&topo, simbolo);
+        //             cout << "EMPILHAD: " << topo->armazena << endl;
+        //         }
+        //         else{
+        //             //Verificando se é operador Binário
+        //             if(simbolo == "*"){
+        //                 desempilhar(&topo);
+        //                 empilhar(&topo, a);
+        //             }
+        //             else{
+        //                 if(simbolo == "+" || simbolo == "."){
+        //                     desempilhar(&topo);
+        //                     if(topo != NULL){
+        //                         desempilhar(&topo);
+        //                         if(simbolo == ".")
+        //                             empilhar(&topo, a);
+        //                         else
+        //                             empilhar(&topo, a);
+        //                     }
+        //                 }
+        //             }
+        //         }
+                
+        //     }
+            
+        //         // op3 = topo->armazena;
+        //     //desempilhar(&topo);
+        //     if(topo == NULL){
+        //         //op3 = topo->armazena;
+        //         cout << "\tEXPRESSÃO VÁLIDA" << endl;
+        //         cout << "----------------------------------------------------------------------" << endl;
+        //         cout <<  " 1 A CONVERSÃO DA EXPRESSAO: '" << expressao << "' INFIXA PARA ";
+        //         cout << "POSFIXA É: " << posfixa << endl;
+        //         cout << "----------------------------------------------------------------------" << endl;
+        //     }
+        //     else
+        //         cout << "\tEXPRESSÃO INVÁLIDA" << endl;
+        // }
 };
 
                                     

@@ -25,6 +25,7 @@ class Posfixa{
             void verificarPosfixa (string posfixa);
             string preencherExpressao(string expressao);
             int verificaParentese(string expressao);
+            void operadoresBinariosVerificacao(string expressao);
 		};
 		~Posfixa();
         
@@ -110,8 +111,7 @@ class Posfixa{
             for(int x = 0; x < expressao.length(); x++){
                 novaExpr += expressao[x];
                 //Tratando para caso seja * A e * (
-                if((expressao[x] == '*' && expressao[x+1] != '(') && 
-                    (expressao[x] == '*' && expressao[x+1] != ')') && 
+                if((expressao[x] == '*' && expressao[x+1] != ')') && 
                     (expressao[x] == '*' && expressao[x+1] != '.') && 
                     (expressao[x] == '*' && expressao[x+1] != '+')){
                     if(x+1 == expressao.length()){
@@ -204,6 +204,32 @@ class Posfixa{
                 return 0;
         }
 
+        //Função para teste, para saber se os operadores binários estão certo, visto que na 
+        //função abaixo não estou sabendo muito bem como implementar
+        void operadoresBinariosVerificacao(string expressao){
+            int verifica1 = 0, verifica2 = 0;
+            for(int x = 0; x < expressao.length(); x++){
+                if(expressao[x] == '+' || expressao[x] == '.'){
+                    if(expressao[x-1] != ')' && expressao[x-1] != '.' && expressao[x-1] != '+' &&
+                        expressao[x+1] != ')' && expressao[x+1] != '.' && expressao[x+1] != '+' &&
+                        x+1 != expressao.length() && x-1 != -1){
+                        verifica1 = 1;
+                    }
+                    else{
+                        cout << "EXP: " << expressao[x] << endl;
+                        verifica2 = 2;
+                    }
+                }
+            }
+            if(verifica2 == 2){
+                cout << " ERRO: EXISTE UM OPERADOR BINÁRIO '+ OU '.' " << endl;
+                cout << " \tQUE NÃO POSSUI SEU CORRESPONDENTE" << endl;
+            }
+
+            else
+                infixaParaPosfixa(expressao);
+        }
+
         /*-----------------------FUNÇÃO INFIXAPARAPOSFIXA---------------------*/
         void infixaParaPosfixa(string expressao){
             string posfixa, recebe, novaExpressao;
@@ -260,14 +286,14 @@ class Posfixa{
                 cout <<  " POSFIXA: " << posfixa << endl;
                 cout << "-----------------------------------------------------" << endl;
                 topo = NULL;
-                verificarPosfixa (posfixa);
+                //verificarPosfixa (posfixa);
             }
             else{
                 cout << " ERRO! FALTANDO PARENTESES" << endl;
             }
         };
 
-        //Tem erro, não sei muito bem o que devo fazer nesta função
+        //Tem erro, não sei muito bem o que devo fazer nesta FUNÇÃO
         /*-----------------------FUNÇÃO VERIFICAR POSFIXA-----------------------*/
         void verificarPosfixa (string posfixa){
             PILHA *topo = NULL; 

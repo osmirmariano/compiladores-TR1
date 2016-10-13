@@ -26,8 +26,8 @@ int main(){
                 cout << "---------------------------------------------------" << endl;
                 cout << " EXPRESSÃO: ";
                 cin >> expressao;
-                pos->operadoresBinariosVerificacao(expressao);
-                //pos->infixaParaPosfixa(expressao);
+                //pos->operadoresBinariosVerificacao(expressao);
+                pos->infixaParaPosfixa(expressao);
                 
                 break;
             case 0:

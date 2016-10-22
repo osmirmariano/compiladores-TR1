@@ -13,6 +13,7 @@ typedef struct PILHA{
 class Posfixa{
 	public:
         int opcao, opction;
+        string posfixaThompson;
 	public:
         //CONSTRUTOR
 		Posfixa(){
@@ -208,7 +209,7 @@ class Posfixa{
             int verifica1 = 0, verifica2 = 0;
             for(int x = 0; x < expressao.length(); x++){
                 if(expressao[x] == '+' || expressao[x] == '.'){
-                    if(expressao[x-1] != ')' && expressao[x-1] != '.' && expressao[x-1] != '+' &&
+                    if(expressao[x-1] != '(' && expressao[x-1] != '.' && expressao[x-1] != '+' &&
                         expressao[x+1] != ')' && expressao[x+1] != '.' && expressao[x+1] != '+' &&
                         x+1 != expressao.length() && x-1 != -1){
                         verifica1 = 1;
@@ -279,91 +280,24 @@ class Posfixa{
                         }
                     }
                 }
+                posfixaThompson = posfixa;
                 cout << "----------------------------------------------------------------------" << endl;
                 cout << " \t A CONVERSÃO DE INFIXA PARA POSFIXA" << endl;
                 cout << " INFIXA: " << novaExpressao << endl;
                 cout << " POSFIXA: " << posfixa << endl;
-                cout << "----------------------------------------------------------------------" << endl;
+                cout << "----------------------------------------------------------------------" << endl << endl;
                 topo = NULL;
-                //Ola teste
-                verificarPosfixa (posfixa, expressao);
             }
             else{
-                cout << endl << "\t ERRO! FALTANDO PARENTESES" << endl;
+                cout << endl << "\t ERRO! FALTANDO PARENTESES" << endl << endl;
             }
             
         };
 
-
-        /*-----------------------FUNÇÃO VERIFICAR POSFIXA-----------------------*/
-        void verificarPosfixa (string posfixa, string expressao){
-            PILHA *topo = NULL; 
-            string simbolo, op1, op2;
-            int a = 0;
-            for(int x = 0; x < posfixa.length(); x++){
-                //simbolo = posfixa[y];
-                //Verificando se é operando
-                if(posfixa[x] != '(' && posfixa[x] != ')' && posfixa[x] != '*' && posfixa[x] != '+' && posfixa[x] != '.'){
-                    //Empilhar o operando
-                    simbolo = posfixa[x];
-                    cout << "oi1" << endl;
-                    empilhar(&topo, simbolo);
-                    cout << "EMPILHAD: " << topo->armazena << endl;
-                }
-                else{
-                    //Operador Binário
-                    if(posfixa[x] == '+' || posfixa[x] == '.'){
-                        //op2 = topo->armazena;
-                        //cout << "oi2" << endl;
-                        //desempilhar(&topo);
-                        cout << "oi3" << endl;
-                        if(topo != NULL){
-                            //op1 = topo->armazena;
-                            cout << "oi4" << endl;
-                            desempilhar(&topo);
-                            if(topo != NULL){
-                                cout << "oi5" << endl;
-                                desempilhar(&topo);
-                                empilhar(&topo, "0");
-                                cout << "oi6" << endl;
-                            }
-                            else{
-                                a = 1;
-                            }
-                        }
-                        else{
-                            a = 1;
-                        }
-                    }
-                    //Operador Unário
-                    else{
-                        if(posfixa[x] == '*'){
-                            op1 = topo->armazena;
-                            desempilhar(&topo);
-                            cout << "oi7" << endl;
-                            empilhar(&topo, "0");
-                            cout << "oi8" << endl;
-                        }
-                    }
-                }                
-            }
-            //if(topo != NULL){}
-            //op1 = topo->armazena;
-            if(a == 1){
-                cout << " OPERADOR NÃO ENCONTRADO" << endl;
-            }
-            else{
-                desempilhar(&topo);
-                if(topo == NULL){    
-                    cout << "\tEXPRESSÃO VÁLIDA" << endl;
-                    cout << "----------------------------------------------------------------------" << endl;
-                    cout <<  " 1 A CONVERSÃO DA EXPRESSAO: '" << expressao << "' INFIXA PARA ";
-                    cout << "POSFIXA É: " << posfixa << endl;
-                    cout << "----------------------------------------------------------------------" << endl;
-                }
-            }
-            //else
-                //cout << "\tEXPRESSÃO INVÁLIDA" << endl;
+        /*-----------------------FUNÇÃO RETORNA POSIFXA---------------------*/
+        string retorno(){
+            return posfixaThompson;
         }
 };
 
+                                    

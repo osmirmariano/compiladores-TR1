@@ -236,15 +236,12 @@ class Posfixa{
                 PILHA *topo = NULL;
                 preencherExpressao(expressao);
                 novaExpressao = preencherExpressao(expressao);
-                //cout << " CORRESPONDENTE: " << novaExpressao << endl << endl;
-
                 for(int x = 0; x < novaExpressao.length(); x++){
                     //Tratamento de ser "(", então empilha -> SITUAÇÃO OK
                     if(novaExpressao[x] == '('){
                         recebe =  novaExpressao[x];
                         empilhar(&topo, recebe);//Empilhar tá OK
                     }
-
                     else{
                         //Tratamento para caso seja ")", então enquanto o topo = "(" desempilha -> SITUAÇÃO OK
                         if(novaExpressao[x] == ')'){ 
@@ -283,6 +280,8 @@ class Posfixa{
                 posfixaThompson = posfixa;
                 cout << "----------------------------------------------------------------------" << endl;
                 cout << " \t A CONVERSÃO DE INFIXA PARA POSFIXA" << endl;
+                cout << "----------------------------------------------------------------------" << endl;
+                
                 cout << " INFIXA: " << novaExpressao << endl;
                 cout << " POSFIXA: " << posfixa << endl;
                 cout << "----------------------------------------------------------------------" << endl << endl;

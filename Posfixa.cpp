@@ -105,6 +105,9 @@ class Posfixa{
         };
 
         /*--------------------- FUNÇÃO PREENCHER EXPRESSAO COM . -------------------*/
+	//O erro está nesse método, existe casos que na expressão depois de calculada para infixa ele vai colocar um ponto a mais
+	//Se todos os testes forem realizados com expressões pequena não vai dá erro, agora se executar com uma grande que 
+	//o professor sempre executar mais aparecer o que é descrito acima.
         string preencherExpressao(string expressao){
             string novaExpr;
             int cont = 0;
